@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443922037401",
+    "project_id": "stoplist-4332e",
+    "storage_bucket": "stoplist-4332e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443922037401:android:d715781ec8d0251bdcd608",
+        "android_client_info": {
+          "package_name": "com.sinabehdadk.stoplist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsdGahorNxZU69PUoE4yoj0xK5thl30b0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

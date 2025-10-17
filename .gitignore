@@ -72,3 +72,33 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# EAS
+eas-build-*/
+*.apk
+*.aab
+*.ipa
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Screenshots (regenerate as needed)
+screenshots/
