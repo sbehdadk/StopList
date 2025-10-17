@@ -44,9 +44,6 @@
     },
     "plugins": [
       "expo-notifications",
-      "@react-native-firebase/app",
-      "@react-native-firebase/analytics",
-      "@react-native-firebase/crashlytics",
       [
         "expo-build-properties",
         {
@@ -74,6 +71,11 @@
     },
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8cb7234c-9175-47f2-8da9-4c96672a31db"
+      }
     }
   }
 }
