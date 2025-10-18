@@ -82,20 +82,24 @@ logs: ## View latest build logs
 
 download: ## Download latest successful APK
 	@echo "📥 Downloading APK..."
-	@BUILD_ID=$$(eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .id // ""'); \
-	if [ -z "$$BUILD_ID" ]; then \
+	@APK_URL=$$(eas build:list --platform android --limit 1 --non-interactive --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .artifacts.applicationArchiveUrl // empty' 2>/dev/null); \
+	if [ -z "$$APK_URL" ]; then \
 		echo "❌ No successful build found"; \
+		echo "ℹ️  Run 'make status' to check build status"; \
 		exit 1; \
 	fi; \
-	APK_URL=$$(eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .artifacts.applicationArchiveUrl // ""'); \
-	if [ -n "$$APK_URL" ]; then \
-		echo "Downloading from: $$APK_URL"; \
-		curl -L -o $(APK_NAME) "$$APK_URL"; \
+	echo "📦 Downloading from EAS..."; \
+	if curl -L -o $(APK_NAME) "$$APK_URL" 2>/dev/null; then \
 		echo ""; \
-		echo "✓ Downloaded: $(APK_NAME)"; \
+		echo "✅ SUCCESS! Downloaded: $(APK_NAME)"; \
 		ls -lh $(APK_NAME); \
+		echo ""; \
+		echo "📱 Install on Android:"; \
+		echo "   1. Transfer $(APK_NAME) to your phone"; \
+		echo "   2. Enable 'Install from Unknown Sources'"; \
+		echo "   3. Tap the APK to install"; \
 	else \
-		echo "❌ No APK URL found"; \
+		echo "❌ Download failed"; \
 		exit 1; \
 	fi
 
