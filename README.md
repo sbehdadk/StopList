@@ -43,7 +43,7 @@ This checks:
 | `make start` | Start development server |
 | `make android` | Run on Android device |
 | `make build` | Build APK on EAS |
-| `make download` | Download latest APK (auto-named: `stoplist-v1.0.0.apk`) |
+| `make download` | Download latest APK (saves to: `builds/stoplist-v1.0.0.apk`) |
 | `make status` | Check build status |
 | `make logs` | View build logs |
 | `make commit MSG="..."` | Commit changes |

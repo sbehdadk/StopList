@@ -4,7 +4,8 @@
 APP_NAME = StopList
 VERSION := $(shell jq -r '.expo.version' app.json 2>/dev/null || echo "1.0.0")
 BUILD_ID := $(shell eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""' 2>/dev/null || echo "")
-APK_NAME = stoplist-v$(VERSION).apk
+BUILD_DIR = builds
+APK_NAME = $(BUILD_DIR)/stoplist-v$(VERSION).apk
 
 help: ## Show this help message
 	@echo "$(APP_NAME) - Makefile Commands"
@@ -45,6 +46,7 @@ clean: ## Clean build artifacts and caches
 	rm -rf .expo
 	rm -rf android/app/build
 	rm -rf android/build
+	rm -rf $(BUILD_DIR)
 	rm -f *.apk
 	@echo "✓ Clean complete!"
 
@@ -82,6 +84,7 @@ logs: ## View latest build logs
 
 download: ## Download latest successful APK
 	@echo "📥 Downloading APK..."
+	@mkdir -p $(BUILD_DIR)
 	@echo "🔍 Finding latest successful build..."
 	@APK_URL=$$(eas build:list --platform android --limit 5 --non-interactive 2>/dev/null | grep -A 20 "Status.*finished" | grep "Application Archive URL" | head -1 | awk '{print $$NF}'); \
 	if [ -z "$$APK_URL" ] || [ "$$APK_URL" = "null" ]; then \
@@ -91,6 +94,7 @@ download: ## Download latest successful APK
 		exit 1; \
 	fi; \
 	echo "📦 Downloading from: $$APK_URL"; \
+	echo "📁 Saving to: $(APK_NAME)"; \
 	echo ""; \
 	if curl -# -L -o $(APK_NAME) "$$APK_URL"; then \
 		echo ""; \

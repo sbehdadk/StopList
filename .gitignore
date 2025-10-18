@@ -88,6 +88,9 @@ eas-build-*/
 *.aab
 *.ipa
 
+# Build artifacts directory
+builds/
+
 # Environment
 .env
 .env.local
