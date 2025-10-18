@@ -2,7 +2,7 @@
 
 # Variables
 APP_NAME = StopList
-VERSION := $(shell jq -r '.version' app.json)
+VERSION := $(shell jq -r '.expo.version' app.json)
 BUILD_ID := $(shell eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""')
 APK_NAME = stoplist-v$(VERSION).apk
 

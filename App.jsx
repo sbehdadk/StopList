@@ -560,7 +560,7 @@ export default function App() {
         {/* Banner Ad */}
         <View style={styles.bannerAdContainer}>
           <BannerAd
-            unitId={__DEV__ ? TestIds.BANNER : 'ca-app-pub-4990808025747866/XXXXX'}
+            unitId={TestIds.BANNER}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
             requestOptions={{
               requestNonPersonalizedAdsOnly: false,
