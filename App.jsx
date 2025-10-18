@@ -19,7 +19,7 @@ import {
   View
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { AdMobBanner, getAdUnitId, initializeAdMob } from './AdMobConfig';
+import { AdMobBannerComponent, initializeAdMob } from './AdMobConfig';
 import CustomDateTimePicker from './CustomDateTimePicker';
 import { enableAnalytics, logAnalyticsEvent } from './firebaseConfig';
 import SplashScreen from './SplashScreen';
@@ -540,12 +540,7 @@ export default function App() {
 
         {/* AdMob Banner */}
         <View style={styles.bannerAdContainer}>
-          <AdMobBanner
-            bannerSize="banner"
-            adUnitID={getAdUnitId('banner')}
-            servePersonalizedAds={true}
-            onDidFailToReceiveAdWithError={(error) => console.log('Banner ad error:', error)}
-          />
+          <AdMobBannerComponent />
           <Text style={styles.versionText}>
             v{Constants.expoConfig?.version || '1.0.0'}
           </Text>

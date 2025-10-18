@@ -1,41 +1,30 @@
 import { Platform } from 'react-native';
 import {
-  AdMobBanner,
-  AdMobInterstitial,
-  setTestDeviceIDAsync,
-} from 'expo-ads-admob';
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+  InterstitialAd,
+  AdEventType,
+} from 'react-native-google-mobile-ads';
 
-// Your AdMob Ad Unit IDs from screenshot
+// Your AdMob Ad Unit IDs
 const AD_UNIT_IDS = {
   banner: {
     android: __DEV__ 
-      ? 'ca-app-pub-3940256099942544/6300978111' // Google test ID
+      ? TestIds.BANNER // Google test ID
       : 'ca-app-pub-4990808025747866/9254694633', // Your real Banner ID
     ios: __DEV__ 
-      ? 'ca-app-pub-3940256099942544/2934735716'
+      ? TestIds.BANNER
       : 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX', // Add iOS ID when ready
   },
   interstitial: {
     android: __DEV__ 
-      ? 'ca-app-pub-3940256099942544/1033173712' // Google test ID
+      ? TestIds.INTERSTITIAL // Google test ID
       : 'ca-app-pub-4990808025747866/8429338759', // Your real Interstitial ID
     ios: __DEV__ 
-      ? 'ca-app-pub-3940256099942544/4411468910'
+      ? TestIds.INTERSTITIAL
       : 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX', // Add iOS ID when ready
   },
-};
-
-// Initialize AdMob (set test device if needed)
-export const initializeAdMob = async () => {
-  try {
-    // In development, use test ads
-    if (__DEV__) {
-      await setTestDeviceIDAsync('EMULATOR');
-    }
-    console.log('✓ AdMob initialized');
-  } catch (error) {
-    console.error('AdMob initialization failed:', error);
-  }
 };
 
 // Get platform-specific ad unit ID
@@ -43,16 +32,64 @@ export const getAdUnitId = (type) => {
   return AD_UNIT_IDS[type][Platform.OS] || AD_UNIT_IDS[type].android;
 };
 
-// Load and show interstitial ad
-export const showInterstitialAd = async () => {
-  try {
-    await AdMobInterstitial.setAdUnitID(getAdUnitId('interstitial'));
-    await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true });
-    await AdMobInterstitial.showAdAsync();
-    console.log('✓ Interstitial ad shown');
-  } catch (error) {
-    console.log('Interstitial ad error:', error.message);
+// Initialize AdMob (no initialization needed with this package)
+export const initializeAdMob = async () => {
+  console.log('✓ AdMob ready (using react-native-google-mobile-ads)');
+};
+
+// Create Banner Ad Component
+export const AdMobBannerComponent = () => {
+  return (
+    <BannerAd
+      unitId={getAdUnitId('banner')}
+      size={BannerAdSize.BANNER}
+      requestOptions={{
+        requestNonPersonalizedAdsOnly: false,
+      }}
+      onAdLoaded={() => {
+        console.log('✓ Banner ad loaded');
+      }}
+      onAdFailedToLoad={(error) => {
+        console.log('Banner ad failed:', error.message);
+      }}
+    />
+  );
+};
+
+// Interstitial Ad
+let interstitial = null;
+let interstitialLoaded = false;
+
+export const loadInterstitialAd = () => {
+  interstitial = InterstitialAd.createForAdRequest(getAdUnitId('interstitial'), {
+    requestNonPersonalizedAdsOnly: false,
+  });
+
+  const unsubscribeLoaded = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+    interstitialLoaded = true;
+    console.log('✓ Interstitial ad loaded');
+  });
+
+  const unsubscribeClosed = interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+    interstitialLoaded = false;
+    // Reload for next time
+    loadInterstitialAd();
+  });
+
+  interstitial.load();
+
+  return () => {
+    unsubscribeLoaded();
+    unsubscribeClosed();
+  };
+};
+
+export const showInterstitialAd = () => {
+  if (interstitialLoaded && interstitial) {
+    interstitial.show();
+  } else {
+    console.log('Interstitial ad not ready yet');
   }
 };
 
-export { AdMobBanner };
+export { BannerAd, BannerAdSize };

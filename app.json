@@ -33,7 +33,7 @@
     "plugins": [
       "expo-notifications",
       [
-        "expo-ads-admob",
+        "react-native-google-mobile-ads",
         {
           "androidAppId": "ca-app-pub-4990808025747866~4500674364",
           "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX"
