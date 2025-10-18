@@ -8,21 +8,17 @@ The first stop-doing list app. Remember what you shouldn't do.
 # View all available commands
 make help
 
-# Setup project
-make setup
-
-# Start development
-make start
-
-# Build APK
+# Build APK (auto-installs dependencies)
 make build
 
 # Download APK after build
 make download
 
-# Quick build & download
+# Or do both
 make quick
 ```
+
+**Note:** `make build` automatically checks and installs dependencies - just run it!
 
 ## 📋 Makefile Commands
 
@@ -81,16 +77,14 @@ make dev
 make run
 ```
 
-## 📦 Building
+## 🔧 Fixed Issues
 
-### EAS Build (Recommended)
-```bash
-make build
-```
-
-### Local Build (Not recommended on Raspberry Pi ARM64)
-Local builds fail on ARM64 due to Android build tools being x86_64 only.
-Use EAS Build instead.
+- ✅ **Dependencies auto-install** before build
+- ✅ **EAS deprecation warning** fixed (artifactPath → applicationArchivePath)
+- ✅ **Firebase packages** v19.2.2 compatible with RN 0.74.5
+- ✅ **AdMob** v13.0.0 properly installed
+- ✅ **Makefile error handling** improved
+- ✅ **One command builds** - everything automated
 
 ## 💰 Monetization
 
