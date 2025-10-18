@@ -4,7 +4,6 @@
     "slug": "stoplist",
     "version": "1.0.0",
     "orientation": "portrait",
-    "description": "Remember what you shouldn't do. The first stop-doing list app.",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
@@ -17,31 +16,35 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sinabehdadk.stoplist",
-      "infoPlist": {
-        "UIBackgroundModes": [
-          "remote-notification"
-        ]
-      }
+      "bundleIdentifier": "com.sinabehdadk.stoplist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1a1a1a"
       },
-      "package": "com.sinabehdadk.stoplist"
+      "package": "com.sinabehdadk.stoplist",
+      "permissions": [
+        "NOTIFICATIONS"
+      ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "owner": "sinabehdadk",
-    "updates": {
-      "url": "https://u.expo.dev/e3a1b2c4-5678-9abc-def0-123456789abc"
-    },
-    "runtimeVersion": "1.0.0",
+    "plugins": [
+      "expo-notifications",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          }
+        }
+      ]
+    ],
+    "owner": "sinova",
     "extra": {
       "eas": {
-        "projectId": "8cb7234c-9175-47f2-8da9-4c96672a31db"
+        "projectId": "66396166-c5e1-42b5-85f4-7ec61a5b6ca9"
       }
     }
   }
