@@ -1,7 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import analytics from '@react-native-firebase/analytics';
-import crashlytics from '@react-native-firebase/crashlytics';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
@@ -22,6 +19,9 @@ import {
   View
 } from 'react-native';
 import Modal from 'react-native-modal';
+import CustomDateTimePicker from './CustomDateTimePicker';
+import { enableAnalytics, logAnalyticsEvent } from './firebaseConfig';
+import SplashScreen from './SplashScreen';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -44,8 +44,8 @@ export default function App() {
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [reminderDate, setReminderDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
+  const [showCustomTimePicker, setShowCustomTimePicker] = useState(false);
   const [tempDate, setTempDate] = useState(new Date());
   const [actionCount, setActionCount] = useState(0);
   const [repeatFrequency, setRepeatFrequency] = useState('none'); // none, daily, weekly, monthly, yearly
@@ -53,24 +53,12 @@ export default function App() {
   // Request notification permissions and initialize
   useEffect(() => {
     const initializeApp = async () => {
-      try {
-        // Initialize Firebase Analytics
-        if (analytics) {
-          await analytics().setAnalyticsCollectionEnabled(true);
-          await analytics().logEvent('app_open', {
-            platform: Platform.OS,
-            version: Constants.expoConfig?.version || '1.0.0',
-          });
-        }
-
-        // Initialize Firebase Crashlytics
-        if (crashlytics) {
-          await crashlytics().setCrashlyticsCollectionEnabled(true);
-        }
-      } catch (error) {
-        console.log('Firebase initialization skipped:', error.message);
-        // Non-critical - app continues without Firebase
-      }
+      // Initialize Firebase Analytics
+      await enableAnalytics();
+      await logAnalyticsEvent('app_open', {
+        platform: Platform.OS,
+        version: Constants.expoConfig?.version || '1.0.0',
+      });
     };
 
     initializeApp();
@@ -144,16 +132,10 @@ export default function App() {
       setNewTask('');
       setActionCount(prev => prev + 1);
 
-      // Log analytics (non-critical)
-      try {
-        if (analytics) {
-          analytics().logEvent('task_created', {
-            task_length: newTask.trim().length,
-          }).catch(() => { });
-        }
-      } catch (error) {
-        // Silently fail - analytics not critical
-      }
+      // Log analytics event
+      logAnalyticsEvent('task_created', {
+        task_length: newTask.trim().length,
+      });
     }
   };
 
@@ -276,26 +258,13 @@ export default function App() {
     Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`);
   };
 
-  const onDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      const newDate = new Date(tempDate);
-      newDate.setFullYear(selectedDate.getFullYear());
-      newDate.setMonth(selectedDate.getMonth());
-      newDate.setDate(selectedDate.getDate());
-      setTempDate(newDate);
-    }
+  const onDateConfirm = (selectedDate) => {
+    setTempDate(selectedDate);
   };
 
-  const onTimeChange = (event, selectedTime) => {
-    setShowTimePicker(false);
-    if (selectedTime) {
-      const newDate = new Date(tempDate);
-      newDate.setHours(selectedTime.getHours());
-      newDate.setMinutes(selectedTime.getMinutes());
-      setTempDate(newDate);
-      setReminderDate(newDate);
-    }
+  const onTimeConfirm = (selectedTime) => {
+    setTempDate(selectedTime);
+    setReminderDate(selectedTime);
   };
 
   const TaskItem = ({ item }) => {
@@ -468,7 +437,7 @@ export default function App() {
             <View style={styles.dateTimeContainer}>
               <TouchableOpacity
                 style={styles.dateTimeButton}
-                onPress={() => setShowDatePicker(true)}
+                onPress={() => setShowCustomDatePicker(true)}
               >
                 <Text style={styles.dateTimeLabel}>📅 Date</Text>
                 <Text style={styles.dateTimeValue}>
@@ -482,7 +451,7 @@ export default function App() {
 
               <TouchableOpacity
                 style={styles.dateTimeButton}
-                onPress={() => setShowTimePicker(true)}
+                onPress={() => setShowCustomTimePicker(true)}
               >
                 <Text style={styles.dateTimeLabel}>⏰ Time</Text>
                 <Text style={styles.dateTimeValue}>
@@ -517,26 +486,6 @@ export default function App() {
               ))}
             </View>
 
-            {showDatePicker && (
-              <DateTimePicker
-                value={tempDate}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={onDateChange}
-                minimumDate={new Date()}
-                textColor="#ffffff"
-              />
-            )}
-
-            {showTimePicker && (
-              <DateTimePicker
-                value={tempDate}
-                mode="time"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={onTimeChange}
-                textColor="#ffffff"
-              />
-            )}
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
@@ -566,6 +515,24 @@ export default function App() {
             </View>
           </View>
         </Modal>
+
+        {/* Custom Date Picker */}
+        <CustomDateTimePicker
+          isVisible={showCustomDatePicker}
+          onClose={() => setShowCustomDatePicker(false)}
+          onConfirm={onDateConfirm}
+          initialDate={tempDate}
+          mode="date"
+        />
+
+        {/* Custom Time Picker */}
+        <CustomDateTimePicker
+          isVisible={showCustomTimePicker}
+          onClose={() => setShowCustomTimePicker(false)}
+          onConfirm={onTimeConfirm}
+          initialDate={tempDate}
+          mode="time"
+        />
 
         {/* AdMob placeholder - add when monetization is needed */}
         <View style={styles.bannerAdContainer}>

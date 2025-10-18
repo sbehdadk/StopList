@@ -12,6 +12,12 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "preview"
+      },
+      "android": {
+        "buildType": "apk",
+        "credentialsSource": "remote",
+        "applicationArchivePath": "android/app/build/outputs/apk/release/app-release.apk",
+        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {

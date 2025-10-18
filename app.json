@@ -2,7 +2,7 @@
   "expo": {
     "name": "StopList",
     "slug": "stoplist",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -28,8 +28,7 @@
         "NOTIFICATIONS",
         "SCHEDULE_EXACT_ALARM",
         "USE_EXACT_ALARM"
-      ],
-      "googleServicesFile": "./google-services.json"
+      ]
     },
     "plugins": [
       "expo-notifications",
@@ -43,8 +42,7 @@
             "kotlinVersion": "2.0.0"
           }
         }
-      ],
-      "@react-native-firebase/app"
+      ]
     ],
     "owner": "sinova",
     "extra": {
