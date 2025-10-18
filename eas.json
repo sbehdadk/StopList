@@ -12,17 +12,20 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "preview"
-      },
-      "android": {
-        "buildType": "apk",
-        "credentialsSource": "remote",
-        "applicationArchivePath": "android/app/build/outputs/apk/release/app-release.apk",
-        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {
       "android": {
-        "buildType": "apk",
+        "buildType": "app-bundle",
+        "credentialsSource": "remote"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "production-aab": {
+      "android": {
+        "buildType": "app-bundle",
         "credentialsSource": "remote"
       },
       "env": {

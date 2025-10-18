@@ -2,7 +2,7 @@
   "expo": {
     "name": "StopList",
     "slug": "stoplist",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -32,6 +32,13 @@
     },
     "plugins": [
       "expo-notifications",
+      [
+        "expo-ads-admob",
+        {
+          "androidAppId": "ca-app-pub-4990808025747866~4500674364",
+          "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX"
+        }
+      ],
       [
         "expo-build-properties",
         {

@@ -1,4 +1,4 @@
-.PHONY: help install clean start build download status logs commit push setup check
+.PHONY: help install clean start build build-aab download status logs commit push setup check
 
 # Variables
 APP_NAME = StopList
@@ -59,12 +59,23 @@ android: ## Run on Android device/emulator
 	npm run android
 
 build: validate ## Build APK on EAS (validates first)
-	@echo "🏗️  Starting EAS build..."
+	@echo "🏗️  Starting EAS build (APK)..."
 	@echo "⚠️  This will use your EAS build credits"
 	@eas build --platform android --profile preview --non-interactive
 	@echo ""
 	@echo "📊 Checking build status..."
 	@make status
+
+build-aab: validate ## Build AAB (App Bundle) for Google Play Store
+	@echo "🏗️  Starting EAS build (AAB for Play Store)..."
+	@echo "⚠️  This will use your EAS build credits"
+	@echo "📦 Building production App Bundle..."
+	@eas build --platform android --profile production-aab --non-interactive
+	@echo ""
+	@echo "📊 Checking build status..."
+	@make status
+	@echo ""
+	@echo "✅ AAB will be ready for Google Play Store upload!"
 
 test: validate ## Run comprehensive pre-build tests
 	@echo ""
@@ -141,8 +152,8 @@ logs: ## View latest build logs
 		echo "❌ No builds found"; \
 	fi
 
-download: ## Download latest successful APK
-	@echo "📥 Downloading APK..."
+download: ## Download latest successful APK/AAB
+	@echo "📥 Downloading build..."
 	@mkdir -p $(BUILD_DIR)
 	@echo "🔍 Finding latest successful build..."
 	@APK_URL=$$(eas build:list --platform android --limit 5 --non-interactive 2>/dev/null | grep -A 20 "Status.*finished" | grep "Application Archive URL" | head -1 | awk '{print $$NF}'); \
@@ -155,15 +166,25 @@ download: ## Download latest successful APK
 	echo "📦 Downloading from: $$APK_URL"; \
 	echo "📁 Saving to: $(APK_NAME)"; \
 	echo ""; \
-	if curl -# -L -o $(APK_NAME) "$$APK_URL"; then \
+	FILE_EXT=$$(echo $$APK_URL | grep -q '\.aab' && echo 'aab' || echo 'apk'); \
+	OUTPUT_NAME=$(BUILD_DIR)/stoplist-v$(VERSION).$$FILE_EXT; \
+	if curl -# -L -o $$OUTPUT_NAME "$$APK_URL"; then \
 		echo ""; \
-		echo "✅ SUCCESS! Downloaded: $(APK_NAME)"; \
-		ls -lh $(APK_NAME); \
+		echo "✅ SUCCESS! Downloaded: $$OUTPUT_NAME"; \
+		ls -lh $$OUTPUT_NAME; \
 		echo ""; \
-		echo "📱 Install on Android:"; \
-		echo "   1. Transfer $(APK_NAME) to your phone"; \
-		echo "   2. Enable 'Install from Unknown Sources'"; \
-		echo "   3. Tap the APK to install"; \
+		if [ "$$FILE_EXT" = "aab" ]; then \
+			echo "📦 App Bundle (AAB) ready for Google Play Store upload!"; \
+			echo "   1. Go to play.google.com/console"; \
+			echo "   2. Select your app"; \
+			echo "   3. Go to 'Production' or 'Testing' track"; \
+			echo "   4. Upload $$OUTPUT_NAME"; \
+		else \
+			echo "📱 APK ready for testing:"; \
+			echo "   1. Transfer $$OUTPUT_NAME to your phone"; \
+			echo "   2. Enable 'Install from Unknown Sources'"; \
+			echo "   3. Tap the file to install"; \
+		fi; \
 		echo ""; \
 		echo "🎉 Your StopList app is ready!"; \
 	else \
