@@ -45,17 +45,18 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0",
-            "kotlinVersion": "1.9.24"
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0",
+            "kotlinVersion": "2.0.0"
           }
         }
       ],
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-4990808025747866~4500674364"
+          "androidAppId": "ca-app-pub-4990808025747866~4500674364",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
       ]
     ],
