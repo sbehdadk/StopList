@@ -25,8 +25,11 @@
       },
       "package": "com.sinabehdadk.stoplist",
       "permissions": [
-        "NOTIFICATIONS"
-      ]
+        "NOTIFICATIONS",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
+      ],
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-notifications",
@@ -36,10 +39,19 @@
           "android": {
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
-            "buildToolsVersion": "34.0.0"
+            "buildToolsVersion": "34.0.0",
+            "kotlinVersion": "2.0.0"
           }
         }
-      ]
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-4990808025747866~4500674364",
+          "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX"
+        }
+      ],
+      "@react-native-firebase/app"
     ],
     "owner": "sinova",
     "extra": {
@@ -49,3 +61,4 @@
     }
   }
 }
+
