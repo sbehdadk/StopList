@@ -21,11 +21,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import {
-  BannerAd,
-  BannerAdSize,
-  TestIds
-} from 'react-native-google-mobile-ads';
 import Modal from 'react-native-modal';
 import SplashScreen from './SplashScreen';
 
@@ -557,15 +552,11 @@ export default function App() {
           </View>
         </Modal>
 
-        {/* Banner Ad */}
+        {/* AdMob placeholder - add when monetization is needed */}
         <View style={styles.bannerAdContainer}>
-          <BannerAd
-            unitId={TestIds.BANNER}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: false,
-            }}
-          />
+          <Text style={styles.versionText}>
+            v{Constants.expoConfig?.version || '1.0.0'}
+          </Text>
         </View>
       </View>
     </View>
@@ -889,6 +880,11 @@ const styles = StyleSheet.create({
   bannerAdContainer: {
     backgroundColor: '#1a1a2e',
     alignItems: 'center',
+    paddingVertical: 8,
+  },
+  versionText: {
+    fontSize: 10,
+    color: '#444',
     paddingVertical: 4,
   },
 });

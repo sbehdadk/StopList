@@ -32,6 +32,13 @@ check: ## Check if dependencies are installed
 		echo "✓ Dependencies up to date"; \
 	fi
 
+validate: check ## Validate config before building
+	@echo "🔍 Validating project configuration..."
+	@npx expo config --type public > /dev/null 2>&1 || (echo "❌ Expo config validation failed" && exit 1)
+	@echo "✓ Expo config valid"
+	@node -e "const pkg = require('./package.json'); const deps = Object.keys(pkg.dependencies); console.log('✓ Dependencies:', deps.length); if (!deps.includes('expo')) { console.error('❌ Missing expo'); process.exit(1); }"
+	@echo "✓ All validations passed"
+
 clean: ## Clean build artifacts and caches
 	@echo "🧹 Cleaning..."
 	rm -rf node_modules
@@ -49,13 +56,16 @@ android: ## Run on Android device/emulator
 	@echo "📱 Running on Android..."
 	npm run android
 
-build: check ## Build APK on EAS (checks dependencies first)
+build: validate ## Build APK on EAS (validates first)
 	@echo "🏗️  Starting EAS build..."
 	@echo "⚠️  This will use your EAS build credits"
 	@eas build --platform android --profile preview --non-interactive
 	@echo ""
 	@echo "📊 Checking build status..."
 	@make status
+
+test: validate ## Run local validation tests
+	@echo "✓ All tests passed - ready to build!"
 
 status: ## Check latest build status
 	@echo "📊 Latest build status:"
