@@ -8,7 +8,7 @@
       "android": {
         "buildType": "apk",
         "credentialsSource": "remote",
-        "artifactPath": "android/app/build/outputs/apk/release/app-release.apk"
+        "applicationArchivePath": "android/app/build/outputs/apk/release/app-release.apk"
       },
       "env": {
         "EXPO_PUBLIC_ENV": "preview"

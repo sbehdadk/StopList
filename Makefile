@@ -1,9 +1,9 @@
-.PHONY: help install clean start build download status logs commit push setup
+.PHONY: help install clean start build download status logs commit push setup check
 
 # Variables
 APP_NAME = StopList
-VERSION := $(shell jq -r '.expo.version' app.json)
-BUILD_ID := $(shell eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""')
+VERSION := $(shell jq -r '.expo.version' app.json 2>/dev/null || echo "1.0.0")
+BUILD_ID := $(shell eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""' 2>/dev/null || echo "")
 APK_NAME = stoplist-v$(VERSION).apk
 
 help: ## Show this help message
@@ -13,13 +13,24 @@ help: ## Show this help message
 
 setup: ## Initial setup - install dependencies
 	@echo "📦 Installing dependencies..."
-	npm install
+	@npm install
 	@echo "✓ Setup complete!"
 
 install: ## Install/update dependencies
 	@echo "📦 Installing dependencies..."
-	npm install
+	@npm install
 	@echo "✓ Dependencies installed!"
+
+check: ## Check if dependencies are installed
+	@if [ ! -d "node_modules" ]; then \
+		echo "⚠️  node_modules not found. Installing dependencies..."; \
+		npm install; \
+	elif [ "node_modules" -ot "package.json" ]; then \
+		echo "⚠️  package.json newer than node_modules. Updating..."; \
+		npm install; \
+	else \
+		echo "✓ Dependencies up to date"; \
+	fi
 
 clean: ## Clean build artifacts and caches
 	@echo "🧹 Cleaning..."
@@ -38,10 +49,10 @@ android: ## Run on Android device/emulator
 	@echo "📱 Running on Android..."
 	npm run android
 
-build: ## Build APK on EAS (production profile)
+build: check ## Build APK on EAS (checks dependencies first)
 	@echo "🏗️  Starting EAS build..."
 	@echo "⚠️  This will use your EAS build credits"
-	eas build --platform android --profile preview --non-interactive
+	@eas build --platform android --profile preview --non-interactive
 	@echo ""
 	@echo "📊 Checking build status..."
 	@make status
