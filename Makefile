@@ -99,6 +99,15 @@ test: validate ## Run comprehensive pre-build tests
 	@test -d node_modules/react-native-gesture-handler && echo "   ✓ gesture-handler installed" || (echo "   ❌ gesture-handler missing" && exit 1)
 	@test -d node_modules/react-native-reanimated && echo "   ✓ reanimated installed" || (echo "   ❌ reanimated missing" && exit 1)
 	@test -d node_modules/react-native-modal && echo "   ✓ modal installed" || (echo "   ❌ modal missing" && exit 1)
+	@test -d node_modules/react-native-google-mobile-ads && echo "   ✓ google-mobile-ads installed" || (echo "   ❌ google-mobile-ads missing" && exit 1)
+	@ADMOB_VER=$$(jq -r '.dependencies["react-native-google-mobile-ads"]' package.json | sed 's/[\^~]//g'); \
+	if [ "$$ADMOB_VER" = "14.2.3" ]; then \
+		echo "   ✓ google-mobile-ads version $$ADMOB_VER (Expo + Kotlin compatible)"; \
+	else \
+		echo "   ⚠️  google-mobile-ads version $$ADMOB_VER may have compatibility issues"; \
+	fi
+	@test -f AdMobConfig.js && echo "   ✓ AdMobConfig.js exists" || (echo "   ❌ AdMobConfig.js missing" && exit 1)
+	@grep -q "react-native-google-mobile-ads" app.json && echo "   ✓ AdMob plugin in app.json" || (echo "   ❌ AdMob plugin missing from app.json" && exit 1)
 	@echo ""
 	@echo "5️⃣  Validating JSON configs..."
 	@jq empty app.json 2>/dev/null && echo "   ✓ app.json valid" || (echo "   ❌ app.json invalid JSON" && exit 1)
