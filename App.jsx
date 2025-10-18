@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import analytics from '@react-native-firebase/analytics';
-import crashlytics from '@react-native-firebase/crashlytics';
+// Firebase temporarily disabled for build testing
+// import analytics from '@react-native-firebase/analytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
@@ -58,15 +59,13 @@ export default function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Enable Firebase Analytics
-        await analytics().setAnalyticsCollectionEnabled(true);
-        await crashlytics().setCrashlyticsCollectionEnabled(true);
-
-        // Log app open
-        await analytics().logEvent('app_open', {
-          platform: Platform.OS,
-          version: Constants.expoConfig?.version || '1.0.0',
-        });
+        // Firebase temporarily disabled for build testing
+        // await analytics().setAnalyticsCollectionEnabled(true);
+        // await crashlytics().setCrashlyticsCollectionEnabled(true);
+        // await analytics().logEvent('app_open', {
+        //   platform: Platform.OS,
+        //   version: Constants.expoConfig?.version || '1.0.0',
+        // });
       } catch (error) {
         console.log('Analytics initialization error:', error);
       }
@@ -149,10 +148,10 @@ export default function App() {
       setNewTask('');
       setActionCount(prev => prev + 1);
 
-      // Track task creation
-      analytics().logEvent('task_created', {
-        task_length: newTask.trim().length,
-      }).catch(() => { });
+      // Firebase temporarily disabled for build testing
+      // analytics().logEvent('task_created', {
+      //   task_length: newTask.trim().length,
+      // }).catch(() => { });
     }
   };
 

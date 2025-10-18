@@ -34,8 +34,7 @@
         "NOTIFICATIONS",
         "SCHEDULE_EXACT_ALARM",
         "USE_EXACT_ALARM"
-      ],
-      "googleServicesFile": "./google-services.json"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -58,8 +57,7 @@
         {
           "androidAppId": "ca-app-pub-4990808025747866~4500674364"
         }
-      ],
-      "@react-native-firebase/app"
+      ]
     ],
     "owner": "sinabehdadk",
     "updates": {
