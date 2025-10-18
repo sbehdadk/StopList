@@ -22,14 +22,15 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
-import {
-  BannerAd,
-  BannerAdSize,
-  getAdUnitId,
-  initializeAdMob,
-  loadInterstitialAd,
-  showInterstitialAd
-} from './AdMobConfig';
+// AdMob temporarily disabled for build testing
+// import {
+//   BannerAd,
+//   BannerAdSize,
+//   getAdUnitId,
+//   initializeAdMob,
+//   loadInterstitialAd,
+//   showInterstitialAd
+// } from './AdMobConfig';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -74,8 +75,9 @@ export default function App() {
     initializeApp();
     requestPermissions();
     loadTasks();
-    initializeAdMob();
-    loadInterstitialAd();
+    // AdMob temporarily disabled
+    // initializeAdMob();
+    // loadInterstitialAd();
 
     // Cleanup function
     return () => {
@@ -84,11 +86,11 @@ export default function App() {
   }, []);
 
   // Show interstitial ad every 5 actions
-  useEffect(() => {
-    if (actionCount > 0 && actionCount % 5 === 0) {
-      showInterstitialAd();
-    }
-  }, [actionCount]);
+  // useEffect(() => {
+  //   if (actionCount > 0 && actionCount % 5 === 0) {
+  //     showInterstitialAd();
+  //   }
+  // }, [actionCount]);
 
   // Save tasks whenever they change
   useEffect(() => {
@@ -506,15 +508,15 @@ export default function App() {
           </View>
         </Modal>
 
-        {/* Banner Ad at bottom */}
+        {/* Banner Ad temporarily disabled */}
         <View style={styles.bannerAdContainer}>
-          <BannerAd
+          {/* <BannerAd
             unitId={getAdUnitId('banner')}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
             requestOptions={{
               requestNonPersonalizedAdsOnly: false,
             }}
-          />
+          /> */}
           <Text style={styles.versionText}>
             v{Constants.expoConfig?.version || '1.0.0'}
           </Text>
