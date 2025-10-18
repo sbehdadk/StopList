@@ -1,4 +1,5 @@
-import { Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import {
   BannerAd,
   BannerAdSize,
@@ -37,24 +38,77 @@ export const initializeAdMob = async () => {
   console.log('✓ AdMob ready (using react-native-google-mobile-ads)');
 };
 
-// Create Banner Ad Component
+// Create Banner Ad Component with Loading State
 export const AdMobBannerComponent = () => {
+  const [adStatus, setAdStatus] = useState('loading');
+  const [errorMsg, setErrorMsg] = useState('');
+
   return (
-    <BannerAd
-      unitId={getAdUnitId('banner')}
-      size={BannerAdSize.BANNER}
-      requestOptions={{
-        requestNonPersonalizedAdsOnly: false,
-      }}
-      onAdLoaded={() => {
-        console.log('✓ Banner ad loaded');
-      }}
-      onAdFailedToLoad={(error) => {
-        console.log('Banner ad failed:', error.message);
-      }}
-    />
+    <View style={bannerStyles.container}>
+      {adStatus === 'loading' && (
+        <View style={bannerStyles.loadingContainer}>
+          <ActivityIndicator size="small" color="#ffa500" />
+          <Text style={bannerStyles.loadingText}>Loading ad...</Text>
+        </View>
+      )}
+      
+      {adStatus === 'error' && __DEV__ && (
+        <View style={bannerStyles.errorContainer}>
+          <Text style={bannerStyles.errorText}>
+            ⚠️ Ad failed: {errorMsg}
+          </Text>
+        </View>
+      )}
+      
+      <BannerAd
+        unitId={getAdUnitId('banner')}
+        size={BannerAdSize.BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: false,
+        }}
+        onAdLoaded={() => {
+          console.log('✅ Banner ad loaded successfully');
+          setAdStatus('loaded');
+        }}
+        onAdFailedToLoad={(error) => {
+          console.log('❌ Banner ad failed:', error.message);
+          setAdStatus('error');
+          setErrorMsg(error.message);
+        }}
+      />
+    </View>
   );
 };
+
+const bannerStyles = StyleSheet.create({
+  container: {
+    width: '100%',
+    minHeight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  loadingText: {
+    color: '#ffa500',
+    fontSize: 12,
+  },
+  errorContainer: {
+    padding: 8,
+    backgroundColor: '#2a2a3e',
+    borderRadius: 8,
+    marginVertical: 4,
+  },
+  errorText: {
+    color: '#ff6b6b',
+    fontSize: 11,
+    textAlign: 'center',
+  },
+});
 
 // Interstitial Ad
 let interstitial = null;

@@ -540,6 +540,11 @@ export default function App() {
 
         {/* AdMob Banner */}
         <View style={styles.bannerAdContainer}>
+          {__DEV__ && (
+            <Text style={styles.adDebugText}>
+              🧪 AdMob Test Mode - Real ads will show after publish
+            </Text>
+          )}
           <AdMobBannerComponent />
           <Text style={styles.versionText}>
             v{Constants.expoConfig?.version || '1.0.0'}
@@ -868,6 +873,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
     alignItems: 'center',
     paddingVertical: 8,
+  },
+  adDebugText: {
+    fontSize: 11,
+    color: '#ffa500',
+    textAlign: 'center',
+    paddingVertical: 4,
+    fontWeight: '600',
   },
   versionText: {
     fontSize: 10,
