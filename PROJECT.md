@@ -40,11 +40,58 @@
 - **AsyncStorage**: Persistent data storage
 - **Gesture Handling**: Swipe interactions
 
-### 🔮 Future Features (Not Implemented)
+### 🔮 Future Features (Planned)
+
+#### 📊 Task Detail Cards (High Priority)
+**Concept**: Click any task to open an immersive detail card with streak tracking and motivation.
+
+**Features**:
+- **Streak Counter**: 
+  - Visual progress bar showing consecutive days avoided
+  - "🔥 12 Days Strong!" heading
+  - Total days avoided vs. total days tracked
+  
+- **Daily Check-In**:
+  - Notification at end of day: "Did you avoid [task]?"
+  - Two-button choice: "✅ I Avoided It" / "❌ I Slipped"
+  - Honest self-reporting builds accountability
+  - Failed streaks show motivational restart message: "Every day is a fresh start"
+
+- **Motivation Section**:
+  - Dynamic quotes based on streak length
+  - Milestone celebrations (7 days, 30 days, 100 days)
+  - "Why I'm Stopping This" - user-written personal reason
+  - Health/money savings calculator (cigarettes, fast food, etc.)
+
+- **Visual Design**:
+  - Glassmorphism card with blur effect
+  - Animated streak flame 🔥 that grows with progress
+  - Color gradient based on streak (red → orange → gold → green)
+  - Confetti animation on milestones
+
+- **Statistics**:
+  - Calendar heatmap (GitHub-style) showing avoided days
+  - Best streak vs. current streak
+  - Success rate percentage
+  - Time/money saved estimates
+
+**Why This Helps Get Users**:
+- **Gamification**: Streaks create addiction to NOT doing bad things
+- **Visual Progress**: Seeing growth motivates continued use
+- **Social Proof**: Screenshots of streaks are shareable
+- **Emotional Connection**: Personal "why" keeps users engaged
+- **Data-Driven**: Real metrics show tangible benefits
+
+**Implementation Priority**: HIGH - Core differentiator from todo apps
+
+---
+
+#### 🎯 Other Future Features
 - **AdMob Monetization**: Removed due to config complexity (can be re-added)
-- **Statistics Dashboard**: Track avoidance streaks
-- **AI Suggestions**: Personalized bad habit detection
-- **Social Features**: Share stop-lists with friends
+- **AI Suggestions**: Analyze patterns and suggest related habits to stop
+- **Social Features**: Share achievements, challenge friends
+- **Habit Chains**: Link related bad habits (late sleeping → hitting snooze)
+- **Reward System**: Unlock themes/badges for long streaks
 
 ---
 
@@ -300,6 +347,13 @@ Before each build:
 - Swipe gestures
 - Motivational splash screen
 
+### v1.1.0 (Planned)
+- **Task Detail Cards** with streak tracking
+- Daily check-in notifications
+- Calendar heatmap visualization
+- Milestone celebrations
+- Personal "why" notes
+
 ---
 
 ## 👤 Contact & Support
@@ -339,4 +393,11 @@ When picking up this project, you should know:
 - Check logs with `make logs`
 - Verify dependencies with `make check`
 - Review this document's "Troubleshooting" section
+
+**If user requests Task Detail Cards feature (v1.1.0):**
+- See "Future Features (Planned)" section above for complete spec
+- Key components needed: TaskDetailModal.jsx, StreakTracker.jsx, DailyCheckIn.jsx
+- Add to storage: streak data, check-in history, personal notes
+- New dependencies: react-native-calendars (heatmap), lottie (animations)
+- Use Firebase to track: streak_broken, check_in_completed events
 
