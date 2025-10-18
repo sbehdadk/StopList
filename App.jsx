@@ -22,7 +22,6 @@ import {
   View
 } from 'react-native';
 import Modal from 'react-native-modal';
-import SplashScreen from './SplashScreen';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -51,22 +50,26 @@ export default function App() {
   const [actionCount, setActionCount] = useState(0);
   const [repeatFrequency, setRepeatFrequency] = useState('none'); // none, daily, weekly, monthly, yearly
 
-  if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
-  }
-
   // Request notification permissions and initialize
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        await analytics().setAnalyticsCollectionEnabled(true);
-        await crashlytics().setCrashlyticsCollectionEnabled(true);
-        await analytics().logEvent('app_open', {
-          platform: Platform.OS,
-          version: Constants.expoConfig?.version || '1.0.0',
-        });
+        // Initialize Firebase Analytics
+        if (analytics) {
+          await analytics().setAnalyticsCollectionEnabled(true);
+          await analytics().logEvent('app_open', {
+            platform: Platform.OS,
+            version: Constants.expoConfig?.version || '1.0.0',
+          });
+        }
+
+        // Initialize Firebase Crashlytics
+        if (crashlytics) {
+          await crashlytics().setCrashlyticsCollectionEnabled(true);
+        }
       } catch (error) {
-        console.log('Analytics initialization error:', error);
+        console.log('Firebase initialization skipped:', error.message);
+        // Non-critical - app continues without Firebase
       }
     };
 
@@ -141,9 +144,16 @@ export default function App() {
       setNewTask('');
       setActionCount(prev => prev + 1);
 
-      analytics().logEvent('task_created', {
-        task_length: newTask.trim().length,
-      }).catch(() => { });
+      // Log analytics (non-critical)
+      try {
+        if (analytics) {
+          analytics().logEvent('task_created', {
+            task_length: newTask.trim().length,
+          }).catch(() => { });
+        }
+      } catch (error) {
+        // Silently fail - analytics not critical
+      }
     }
   };
 
@@ -368,6 +378,11 @@ export default function App() {
       </Animated.View>
     );
   };
+
+  // Show splash screen first (after all hooks)
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
   return (
     <View style={{ flex: 1 }}>
