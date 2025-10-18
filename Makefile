@@ -82,14 +82,17 @@ logs: ## View latest build logs
 
 download: ## Download latest successful APK
 	@echo "📥 Downloading APK..."
-	@APK_URL=$$(eas build:list --platform android --limit 1 --non-interactive --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .artifacts.applicationArchiveUrl // empty' 2>/dev/null); \
-	if [ -z "$$APK_URL" ]; then \
+	@echo "🔍 Finding latest successful build..."
+	@APK_URL=$$(eas build:list --platform android --limit 5 --non-interactive 2>/dev/null | grep -A 20 "Status.*finished" | grep "Application Archive URL" | head -1 | awk '{print $$NF}'); \
+	if [ -z "$$APK_URL" ] || [ "$$APK_URL" = "null" ]; then \
 		echo "❌ No successful build found"; \
 		echo "ℹ️  Run 'make status' to check build status"; \
+		echo "ℹ️  Run 'make build' to create a new build"; \
 		exit 1; \
 	fi; \
-	echo "📦 Downloading from EAS..."; \
-	if curl -L -o $(APK_NAME) "$$APK_URL" 2>/dev/null; then \
+	echo "📦 Downloading from: $$APK_URL"; \
+	echo ""; \
+	if curl -# -L -o $(APK_NAME) "$$APK_URL"; then \
 		echo ""; \
 		echo "✅ SUCCESS! Downloaded: $(APK_NAME)"; \
 		ls -lh $(APK_NAME); \
@@ -98,7 +101,10 @@ download: ## Download latest successful APK
 		echo "   1. Transfer $(APK_NAME) to your phone"; \
 		echo "   2. Enable 'Install from Unknown Sources'"; \
 		echo "   3. Tap the APK to install"; \
+		echo ""; \
+		echo "🎉 Your StopList app is ready!"; \
 	else \
+		echo ""; \
 		echo "❌ Download failed"; \
 		exit 1; \
 	fi

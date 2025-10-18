@@ -7,20 +7,19 @@ The first stop-doing list app. Remember what you shouldn't do.
 ## 🚀 Quick Start
 
 ```bash
-# View all available commands
-make help
-
-# Build APK (auto-installs dependencies)
-make build
-
-# Download APK after build
+# Download the latest APK (already built!)
 make download
 
-# Or do both
+# Or build from scratch
+make build    # Takes ~8 minutes
+make download # Then download
+
+# Or do both in one command
 make quick
 ```
 
-**Note:** `make build` automatically validates and installs dependencies!
+**Note:** `make build` automatically validates and installs dependencies!  
+**Current APK**: Already built and ready - just run `make download`!
 
 ## 🧪 Test Before Building
 
@@ -91,14 +90,25 @@ make dev
 make run
 ```
 
+## ✅ Latest Build Status
+
+**Build ID**: `eb95d080-a5a8-4411-bbac-9db79c3dae64`  
+**Status**: ✅ **SUCCESS**  
+**Built**: October 18, 2025  
+**APK Size**: 70 MB  
+**Download**: [stoplist-v1.0.0.apk](https://expo.dev/artifacts/eas/v6hm9PrCGx1y1118vDBtsd.apk)
+
+---
+
 ## 🔧 Fixed Issues
 
 - ✅ **Dependencies auto-install** before build
 - ✅ **EAS deprecation warning** fixed (artifactPath → applicationArchivePath)
 - ✅ **Firebase packages** v19.2.2 compatible with RN 0.74.5
-- ✅ **AdMob** v13.0.0 properly installed
+- ✅ **AdMob removed** (config issues, can be re-added)
 - ✅ **Makefile error handling** improved
 - ✅ **One command builds** - everything automated
+- ✅ **Build successful** on first try after fixes!
 
 ## 💰 Monetization
 
