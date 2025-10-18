@@ -2,6 +2,8 @@
 
 The first stop-doing list app. Remember what you shouldn't do.
 
+> **📖 Full Documentation**: See [PROJECT.md](PROJECT.md) for complete architecture, features, and troubleshooting.
+
 ## 🚀 Quick Start
 
 ```bash
@@ -18,7 +20,19 @@ make download
 make quick
 ```
 
-**Note:** `make build` automatically checks and installs dependencies - just run it!
+**Note:** `make build` automatically validates and installs dependencies!
+
+## 🧪 Test Before Building
+
+```bash
+# Validate everything locally (no EAS credits used)
+make test
+```
+
+This checks:
+- ✅ Dependencies installed
+- ✅ Expo config valid
+- ✅ All imports resolved
 
 ## 📋 Makefile Commands
 
