@@ -1,142 +1,115 @@
-# StopList - Development & Deployment Commands
+.PHONY: help install clean start build download status logs commit push setup
 
-.PHONY: help install start android ios test build-dev build-preview build-prod submit-android update clean version-patch version-minor version-major
+# Variables
+APP_NAME = StopList
+VERSION := $(shell jq -r '.version' app.json)
+BUILD_ID := $(shell eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""')
+APK_NAME = stoplist-v$(VERSION).apk
 
-# Default target
-help:
-	@echo "StopList - Available Commands:"
-	@echo ""
-	@echo "Development:"
-	@echo "  make install       - Install all dependencies"
-	@echo "  make start         - Start Expo dev server"
-	@echo "  make android       - Run on Android device"
-	@echo "  make ios           - Run on iOS device"
-	@echo "  make test          - Run tests"
-	@echo ""
-	@echo "Versioning:"
-	@echo "  make version-patch - Bump patch version (1.0.0 → 1.0.1)"
-	@echo "  make version-minor - Bump minor version (1.0.0 → 1.1.0)"
-	@echo "  make version-major - Bump major version (1.0.0 → 2.0.0)"
-	@echo ""
-	@echo "Building:"
-	@echo "  make build-dev     - Build development APK (for testing with ads)"
-	@echo "  make build-preview - Build preview APK (test before production)"
-	@echo "  make build-prod    - Build production AAB (for Google Play)"
-	@echo ""
-	@echo "Deployment:"
-	@echo "  make submit        - Submit to Google Play Store"
-	@echo "  make update        - Push OTA update to users"
-	@echo ""
-	@echo "Maintenance:"
-	@echo "  make clean         - Clean build cache"
-	@echo "  make status        - Show project status"
+help: ## Show this help message
+	@echo "$(APP_NAME) - Makefile Commands"
+	@echo "================================"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-# Install dependencies
-install:
+setup: ## Initial setup - install dependencies
 	@echo "📦 Installing dependencies..."
 	npm install
+	@echo "✓ Setup complete!"
 
-# Start development server
-start:
-	@echo "🚀 Starting Expo dev server..."
-	@echo "Scan QR code with Expo Go app on your phone"
-	npx expo start
+install: ## Install/update dependencies
+	@echo "📦 Installing dependencies..."
+	npm install
+	@echo "✓ Dependencies installed!"
 
-# Run on Android
-android:
-	@echo "🤖 Running on Android..."
-	npx expo start --android
-
-# Run on iOS
-ios:
-	@echo "🍎 Running on iOS..."
-	npx expo start --ios
-
-# Run tests
-test:
-	@echo "🧪 Running tests..."
-	npm test
-
-# Version bumping
-version-patch:
-	@echo "📦 Bumping patch version..."
-	@node scripts/bump-version.js patch
-
-version-minor:
-	@echo "📦 Bumping minor version..."
-	@node scripts/bump-version.js minor
-
-version-major:
-	@echo "📦 Bumping major version..."
-	@node scripts/bump-version.js major
-
-# Build development version (for testing)
-build-dev:
-	@echo "🔨 Building development APK..."
-	@echo "This includes debugging and you can test AdMob ads"
-	@echo "Build will take ~15-20 minutes"
-	eas build --platform android --profile development
-	@echo "✅ Build started! Check: https://expo.dev/accounts/sinabehdadk/projects/stoplist/builds"
-
-# Build preview version (test before production)
-build-preview:
-	@echo "🔨 Building preview APK..."
-	@echo "This is like production but as APK (easier to test)"
-	@echo "Build will take ~15-20 minutes"
-	eas build --platform android --profile preview
-	@echo "✅ Build started! Check: https://expo.dev/accounts/sinabehdadk/projects/stoplist/builds"
-
-# Build production version (for Google Play)
-build-prod:
-	@echo "🔨 Building production AAB for Google Play..."
-	@echo "This is the final version for store submission"
-	@echo "Build will take ~15-20 minutes"
-	eas build --platform android --profile production
-	@echo "✅ Build started! Check: https://expo.dev/accounts/sinabehdadk/projects/stoplist/builds"
-
-# Submit to Google Play
-submit:
-	@echo "📤 Submitting to Google Play Store..."
-	@echo "Make sure you have a production build first!"
-	eas submit --platform android
-	@echo "✅ Submitted! Check Google Play Console for review status"
-
-# Push OTA update
-update:
-	@echo "🔄 Publishing OTA update..."
-	@read -p "Enter update message: " msg; \
-	eas update --branch production --message "$$msg"
-	@echo "✅ Update published! Users will get it on next app restart"
-
-# Clean build cache
-clean:
-	@echo "🧹 Cleaning build cache..."
+clean: ## Clean build artifacts and caches
+	@echo "🧹 Cleaning..."
 	rm -rf node_modules
 	rm -rf .expo
+	rm -rf android/app/build
 	rm -rf android/build
-	rm -rf ios/build
-	npm install
-	@echo "✅ Clean complete!"
+	rm -f *.apk
+	@echo "✓ Clean complete!"
 
-# Show project status
-status:
-	@echo "📊 Project Status:"
-	@echo ""
-	@echo "Expo Account: sinabehdadk"
-	@echo "Project: StopList"
-	@echo ""
-	@npx expo whoami || echo "❌ Not logged in to Expo"
-	@echo ""
-	@echo "Recent builds:"
-	@eas build:list --limit 3 || echo "Run 'eas login' first"
+start: ## Start development server
+	@echo "🚀 Starting Expo development server..."
+	npm start
 
-# Quick test on phone
-test-phone:
-	@echo "📱 Testing on your phone:"
-	@echo "1. Install 'Expo Go' app from Play Store"
-	@echo "2. Run: make start"
-	@echo "3. Scan QR code with Expo Go app"
-	@echo ""
-	@echo "Note: AdMob ads won't show in Expo Go"
-	@echo "For testing ads, use: make build-dev"
+android: ## Run on Android device/emulator
+	@echo "📱 Running on Android..."
+	npm run android
 
+build: ## Build APK on EAS (production profile)
+	@echo "🏗️  Starting EAS build..."
+	@echo "⚠️  This will use your EAS build credits"
+	eas build --platform android --profile preview --non-interactive
+	@echo ""
+	@echo "📊 Checking build status..."
+	@make status
+
+status: ## Check latest build status
+	@echo "📊 Latest build status:"
+	@eas build:list --limit 1
+
+logs: ## View latest build logs
+	@echo "📋 Opening build logs..."
+	@BUILD_ID=$$(eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0].id // ""'); \
+	if [ -n "$$BUILD_ID" ]; then \
+		eas build:view $$BUILD_ID; \
+	else \
+		echo "❌ No builds found"; \
+	fi
+
+download: ## Download latest successful APK
+	@echo "📥 Downloading APK..."
+	@BUILD_ID=$$(eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .id // ""'); \
+	if [ -z "$$BUILD_ID" ]; then \
+		echo "❌ No successful build found"; \
+		exit 1; \
+	fi; \
+	APK_URL=$$(eas build:list --limit 1 --json 2>/dev/null | jq -r '.[0] | select(.status=="finished") | .artifacts.applicationArchiveUrl // ""'); \
+	if [ -n "$$APK_URL" ]; then \
+		echo "Downloading from: $$APK_URL"; \
+		curl -L -o $(APK_NAME) "$$APK_URL"; \
+		echo ""; \
+		echo "✓ Downloaded: $(APK_NAME)"; \
+		ls -lh $(APK_NAME); \
+	else \
+		echo "❌ No APK URL found"; \
+		exit 1; \
+	fi
+
+commit: ## Commit changes with message (usage: make commit MSG="your message")
+	@if [ -z "$(MSG)" ]; then \
+		echo "❌ Please provide a commit message: make commit MSG=\"your message\""; \
+		exit 1; \
+	fi
+	git add -A
+	git commit -m "$(MSG)"
+	@echo "✓ Changes committed!"
+
+push: ## Push to remote repository
+	@echo "🚀 Pushing to remote..."
+	git push
+	@echo "✓ Pushed to remote!"
+
+cp: ## Commit and push (usage: make cp MSG="your message")
+	@make commit MSG="$(MSG)"
+	@make push
+
+version: ## Show current version
+	@echo "$(APP_NAME) v$(VERSION)"
+
+info: ## Show project information
+	@echo "Project: $(APP_NAME)"
+	@echo "Version: $(VERSION)"
+	@echo "Package: com.sinabehdadk.stoplist"
+	@echo "Platform: Android"
+	@echo "SDK: Expo 51"
+
+# Development helpers
+dev: start ## Alias for start
+
+run: android ## Alias for android
+
+# Quick build and download
+quick: build download ## Build and download APK in one command
