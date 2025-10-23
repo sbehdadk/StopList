@@ -1,4 +1,4 @@
-.PHONY: help install clean start build build-aab download status logs commit push setup check
+.PHONY: help install clean start build build-aab download status logs commit push setup check credentials
 
 # Variables
 APP_NAME = StopList
@@ -32,6 +32,12 @@ check: ## Check if dependencies are installed
 	else \
 		echo "✓ Dependencies up to date"; \
 	fi
+
+credentials: ## Setup Android credentials (keystore) - Run this once for new accounts
+	@echo "🔑 Setting up Android credentials..."
+	@echo "⚠️  This will generate a keystore if you don't have one"
+	@eas credentials --platform android
+	@echo "✓ Credentials configured!"
 
 validate: check ## Validate config before building
 	@echo "🔍 Validating project configuration..."
