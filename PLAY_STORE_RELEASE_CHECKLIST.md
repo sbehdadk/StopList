@@ -179,9 +179,19 @@ Select ONLY these:
 
 ---
 
-### ✅ 2. App name
-- **Name:** StopList
-- **Short description:** Simple task manager with notifications
+### ✅ 2. App name and descriptions
+- **App name:** StopList
+- **Short description (80 chars max):**
+  ```
+  Task manager with smart reminders. Simple, fast, and helps you stay organized.
+  ```
+  **OR:**
+  ```
+  Create tasks with notifications. Snooze, dismiss, and stay productive daily.
+  ```
+  
+  ⚠️ **AVOID these words:** Best, Top, #1, New, Download, Install, Play, Million, Sale
+  
 - **Full description:** (keep your current description)
 
 ---
@@ -190,6 +200,39 @@ Select ONLY these:
 - App icon: ✅ Already set
 - Feature graphic: ✅ Already set
 - Screenshots: ✅ Already set
+
+---
+
+### ✅ 4. Countries and regions ⚠️ IMPORTANT
+**Recommended for Germany-based developer:**
+
+**Start with these regions (60-80 countries):**
+
+**Europe (EU + EEA):**
+- ✅ All 27 EU countries (Germany, France, Italy, Spain, Netherlands, Poland, etc.)
+- ✅ Norway, Switzerland, Iceland (EEA)
+- ✅ United Kingdom
+
+**English-speaking markets:**
+- ✅ United States, Canada, Australia, New Zealand, Singapore, South Africa
+
+**Developed markets:**
+- ✅ Japan, South Korea, Israel, UAE, Saudi Arabia
+
+**Emerging markets (optional):**
+- ✅ India, Brazil, Mexico, Turkey, Indonesia, Philippines
+
+**AVOID:**
+- ❌ China (requires special licensing)
+- ❌ Russia (sanctions/payment issues)
+- ❌ Iran (Google Play blocked - use Telegram/APK distribution instead)
+
+**How to select:**
+1. Go to: **Store presence** → **Store settings**
+2. Scroll to **"Countries"**
+3. Click **"Add countries"**
+4. Select countries from the list above
+5. Save
 
 ---
 
