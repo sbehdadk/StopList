@@ -2,7 +2,7 @@
   "expo": {
     "name": "StopList",
     "slug": "stoplist",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -24,6 +24,7 @@
         "backgroundColor": "#1a1a1a"
       },
       "package": "com.sinabehdadk.stoplist",
+      "versionCode": 3,
       "permissions": [
         "NOTIFICATIONS",
         "SCHEDULE_EXACT_ALARM",
